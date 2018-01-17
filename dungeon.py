@@ -317,9 +317,20 @@ class Generator():
  
             self.tiles_level.append(''.join(tmp_tiles))
  
-        #print('Room List: ', self.room_list)
-        #print('\nCorridor List: ', self.corridor_list)
+        print('Room List: ', self.room_list)
+        print('\nCorridor List: ', self.corridor_list)
  
+        [print(row) for row in self.tiles_level]
+
+    def print_tiles(self):
+        tmp_tiles = []
+        for row_num, row in enumerate(self.level):
+            tmp_tiles[row_num].append([])
+            for col_num, col in enumerate(row):
+                tmp_tiles[row_num][col_num] = self.tiles[col]
+            #self.tiles_level = ''.join(tmp_tiles)
+        self.tiles_level = ''.join(tmp_tiles)
+
         [print(row) for row in self.tiles_level]
 
     def get_tiles(self):

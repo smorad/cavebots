@@ -3,8 +3,8 @@ import enum
 
 
 Dir = {
-    'N': (0, 1),
-    'S': (0, -1),
+    'N': (0, -1),
+    'S': (0, 1),
     'E': (1, 0),
     'W': (-1, 0),
     'nop': (0, 0)
@@ -45,15 +45,15 @@ class Bot:
                     return
 
     def move(self):
+        self.mark_seen()
         move = self.get_move()
         tmp = self.tile
         new_tile = tadd(self.tile, Dir[move])
+        print(self.strid, tmp, '->', new_tile)
         self.tile = new_tile 
         self.grid.level[new_tile[0]][new_tile[1]] = self.strid
         # Mark old pos as seen
-        self.grid.level[tmp[0]][tmp[1]] = 'explored'
         self.mark_vision()
-        self.mark_seen()
 
     def get_vision_tiles_idx(self):
         # TODO fix seeing thru walls
@@ -105,6 +105,7 @@ class Bot:
                 y = self.tile[1] + del_y
                 # Don't check outside map
                 if not self.valid_move((x, y)):
+                    print('invalid ', x, y)
                     continue
                 print(x, y)
                 unexplored[direction] += score_tiles([self.grid.level[x][y]])
@@ -127,8 +128,10 @@ def score_tiles(tiles):
     for t in tiles:
         if t in ['floor', 'vision']:
             score += 1
-        elif t in ['wall', 'stone']:
-            score -= 1
+        elif t in ['explored']:
+            score += 0.25
+        #elif t in ['wall', 'stone']:
+        #    score -= 1
     return score
 
 def get_order(bots):
@@ -158,11 +161,12 @@ import time
 import os
 while(True):
     order = get_order(bots)
+    print('ord', order)
     for bot in order:
+        print(bots[bot - 1].strid, 'is moving')
         bots[bot - 1].move()
-        print('tiiling')
-        g.gen_tiles_level()
-        time.sleep(1)
+        g.print_tiles()
+        time.sleep(3)
 
 # leader is selected by furthest away from mapped area
 # leader jumps towards unmapped area
