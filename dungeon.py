@@ -16,10 +16,18 @@ import random
  
 CHARACTER_TILES = {'stone': ' ',
                    'floor': '.',
-                   'wall': '#'}
+                   'wall': '#',
+                   'bot1': '1',
+                   'bot2': '2',
+                   'bot3': '3',
+                   'explored': 'e',
+                   'vision': 'O'}
  
  
 class Generator():
+    def is_open(self, x, y):
+        return self.level[x][y] in ['floor', 'explored', 'vision']
+
     def __init__(self, width=64, height=64, max_rooms=15, min_room_xy=5,
                  max_room_xy=10, rooms_overlap=False, random_connections=1,
                  random_spurs=3, tiles=CHARACTER_TILES):
@@ -296,13 +304,26 @@ class Generator():
                     tmp_tiles.append(self.tiles['floor'])
                 if col == 'wall':
                     tmp_tiles.append(self.tiles['wall'])
+                if col == 'bot1':
+                    tmp_tiles.append(self.tiles['bot1'])
+                if col == 'bot2':
+                    tmp_tiles.append(self.tiles['bot2'])
+                if col == 'bot3':
+                    tmp_tiles.append(self.tiles['bot3'])
+                if col == 'explored':
+                    tmp_tiles.append(self.tiles['explored'])
+                if col == 'vision':
+                    tmp_tiles.append(self.tiles['vision'])
  
             self.tiles_level.append(''.join(tmp_tiles))
  
-        print('Room List: ', self.room_list)
-        print('\nCorridor List: ', self.corridor_list)
+        #print('Room List: ', self.room_list)
+        #print('\nCorridor List: ', self.corridor_list)
  
         [print(row) for row in self.tiles_level]
+
+    def get_tiles(self):
+        return self.level
  
  
 if __name__ == '__main__':
